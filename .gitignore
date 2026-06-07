@@ -1,0 +1,23 @@
+# Python build/cache artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints
+.venv/
+env/
+venv/
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Project specifics
+.env
+data/
+tmp/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
