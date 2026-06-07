@@ -8,12 +8,14 @@ from aiogram.exceptions import TelegramAPIError
 from src.utils.url_parser import find_supported_url
 from src.utils.file_manager import create_temp_dir, cleanup_dir
 from src.services.downloader_factory import DownloaderFactory
+from src.config import TELEGRAM_API_SERVER_URL
 
 logger = logging.getLogger(__name__)
 router = Router(name="downloader")
 
-# 50 MB in bytes (Telegram Bot API upload limit)
-TELEGRAM_UPLOAD_LIMIT_BYTES = 50 * 1024 * 1024
+# Determine file upload limits based on local Bot API server vs public server (2 GB vs 50 MB)
+UPLOAD_LIMIT_BYTES = 2000 * 1024 * 1024 if TELEGRAM_API_SERVER_URL else 50 * 1024 * 1024
+UPLOAD_LIMIT_MB = 2000 if TELEGRAM_API_SERVER_URL else 50
 
 @router.message()
 async def handle_url(message: Message) -> None:
@@ -47,11 +49,11 @@ async def handle_url(message: Message) -> None:
             
         # Check size of the file
         file_size = result.file_path.stat().st_size
-        if file_size > TELEGRAM_UPLOAD_LIMIT_BYTES:
+        if file_size > UPLOAD_LIMIT_BYTES:
             size_mb = file_size / (1024 * 1024)
             await status_msg.edit_text(
                 f"❌ The video is too large to send ({size_mb:.1f} MB).\n"
-                f"Telegram Bot API limits uploads to 50 MB."
+                f"Telegram Bot API limits uploads to {UPLOAD_LIMIT_MB} MB."
             )
             return
             
