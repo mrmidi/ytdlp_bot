@@ -9,6 +9,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 SUPER_ADMIN_ID = int(os.getenv("SUPER_ADMIN_ID", "1150695"))
 DB_URL = os.getenv("DB_URL", "sqlite+aiosqlite:///data/bot.db")
 TMP_DIR = Path(os.getenv("TMP_DIR", "./tmp")).resolve()
+TELEGRAM_API_SERVER_URL = os.getenv("TELEGRAM_API_SERVER_URL", "")
 
 # Extract database directory if sqlite
 if DB_URL.startswith("sqlite"):

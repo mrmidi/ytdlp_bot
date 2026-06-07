@@ -37,10 +37,25 @@ async def main() -> None:
         sys.exit(1)
         
     # 4. Initialize bot and dispatcher
-    bot = Bot(
-        token=BOT_TOKEN,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-    )
+    from src.config import TELEGRAM_API_SERVER_URL
+    
+    if TELEGRAM_API_SERVER_URL:
+        logger.info(f"Using custom local Telegram Bot API Server: {TELEGRAM_API_SERVER_URL}")
+        from aiogram.client.session.aiohttp import AiohttpSession
+        from aiogram.client.telegram import TelegramAPIServer
+        
+        custom_api_server = TelegramAPIServer.from_base(TELEGRAM_API_SERVER_URL, is_local=True)
+        session = AiohttpSession(api=custom_api_server)
+        bot = Bot(
+            token=BOT_TOKEN,
+            session=session,
+            default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+        )
+    else:
+        bot = Bot(
+            token=BOT_TOKEN,
+            default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+        )
     dp = get_dispatcher()
     
     logger.info("🤖 Starting Telegram Bot polling...")
