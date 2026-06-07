@@ -25,7 +25,7 @@ async def cmd_allow(message: Message) -> None:
     """Allow a user to use the bot. Format: /allow <user_id> [username]"""
     args = message.text.split()[1:]
     if not args:
-        await message.answer(f"❌ Usage: {html.code('/allow <user_id> [username]')}")
+        await message.answer("❌ Usage: <code>/allow &lt;user_id&gt; [username]</code>")
         return
         
     try:
@@ -49,7 +49,7 @@ async def cmd_revoke(message: Message) -> None:
     """Revoke a user's access. Format: /revoke <user_id>"""
     args = message.text.split()[1:]
     if not args:
-        await message.answer(f"❌ Usage: {html.code('/revoke <user_id>')}")
+        await message.answer("❌ Usage: <code>/revoke &lt;user_id&gt;</code>")
         return
         
     try:

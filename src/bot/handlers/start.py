@@ -34,9 +34,9 @@ async def cmd_help(message: Message) -> None:
         f"3. Temporary files are immediately cleaned up to save space.\n\n"
         f"🔐 {html.bold('Access Control:')}\n"
         f"Only allowed users can interact with this bot. If you are a Super Admin, you can use:\n"
-        f"• {html.code('/allow <user_id> [username]')} - Allow a user\n"
-        f"• {html.code('/revoke <user_id>')} - Revoke a user's access\n"
-        f"• {html.code('/list')} - List all allowed users"
+        f"• <code>/allow &lt;user_id&gt; [username]</code> - Allow a user\n"
+        f"• <code>/revoke &lt;user_id&gt;</code> - Revoke a user's access\n"
+        f"• <code>/list</code> - List all allowed users"
     )
     await message.answer(help_text)
 
