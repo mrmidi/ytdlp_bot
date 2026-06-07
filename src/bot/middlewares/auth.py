@@ -46,8 +46,9 @@ class AllowedUserMiddleware(BaseMiddleware):
         
         if event.chat.type == "private":
             await event.answer(
-                f"⚠️ You are not authorized to use this bot.\n"
-                f"Please ask the administrator to allow your user ID: `{user_id}`"
+                f"⚠️ You are not authorized to use this bot.\n\n"
+                f"📨 To request access, please send the /request command.\n"
+                f"Otherwise, ask the administrator to allow your user ID: `{user_id}`"
             )
         # For non-private chats (groups/channels), we silently ignore the message.
         return
