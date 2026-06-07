@@ -82,6 +82,41 @@ You can build and deploy the containerized bot in a single command. The Docker i
 
 ---
 
+## 🔐 Production SSL & Webhooks (Optional)
+
+If you plan to run webhooks in production, Telegram requires a secure **HTTPS** endpoint. You can easily obtain certificates and automate renewals using the included setup script.
+
+### 1. Generate SSL Certificates via Certbot
+Run the interactive `getcert.sh` script as root on your Debian 12 server. It will automatically check/install Certbot, temporarily stop any services using port 80, request the Let's Encrypt certificates, copy them into the `./certs` folder, and configure automated 90-day renewals:
+```bash
+sudo ./getcert.sh
+```
+
+### 2. Configure Docker Compose for Direct HTTPS
+Update the `telegram-bot-api` service in your `docker-compose.yml` to mount the certificates and enable direct HTTPS:
+
+```yaml
+  telegram-bot-api:
+    image: aiogram/telegram-bot-api:latest
+    restart: unless-stopped
+    ports:
+      - "12654:12654"
+    environment:
+      TELEGRAM_API_ID: "${TELEGRAM_API_ID}"
+      TELEGRAM_API_HASH: "${TELEGRAM_API_HASH}"
+      TELEGRAM_LOCAL: 1
+      TELEGRAM_HTTP_PORT: 12654
+      # Enable direct HTTPS on the local API server
+      TELEGRAM_SSL_CERT_FILE: "/etc/certs/fullchain.pem"
+      TELEGRAM_SSL_KEY_FILE: "/etc/certs/privkey.pem"
+    volumes:
+      - telegram-api-data:/var/lib/telegram-bot-api
+      - ./tmp:/app/tmp
+      - ./certs:/etc/certs:ro  # Mount the certs directory
+```
+
+---
+
 ## 🤖 Interaction & Commands
 
 ### For Requesters (Unauthorized Users)
@@ -104,6 +139,7 @@ ytdlp_bot/
 ├── README.md              # Project documentation
 ├── docker-compose.yml     # Compose settings for containerized service
 ├── Dockerfile             # Builds python environment with ffmpeg
+├── getcert.sh             # Interactive SSL certificate getter and renewal hook installer
 ├── src/
 │   ├── main.py            # Startup checking, DB initialization, and bot polling
 │   ├── config.py          # Environment settings loader
